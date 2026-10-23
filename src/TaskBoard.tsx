@@ -12,8 +12,8 @@ function Card({task,projects,milestones,now,onPatch,onEdit,onDelete}:{task:Task;
   const seconds=task.accumulated_seconds+(task.started_at?Math.max(0,Math.floor((now-Date.parse(task.started_at))/1000)):0);
   const clock=`${Math.floor(seconds/3600)}:${String(Math.floor(seconds%3600/60)).padStart(2,'0')}:${String(seconds%60).padStart(2,'0')}`;
   const context=milestones.find(x=>x.id===task.milestone_id)?.title||projects.find(x=>x.id===task.project_id)?.title||'Standalone task';
-  return <article ref={setNodeRef} className={'taskCard '+(isDragging?'dragging':'')} style={{transform:transform?`translate3d(${transform.x}px,${transform.y}px,0)`:undefined}}>
-    <button className="dragHandle" aria-label={`Drag ${task.title}`} {...listeners} {...attributes}>⋮⋮</button>
+  return <article ref={setNodeRef} className={'taskCard '+(isDragging?'dragging':'')} style={{transform:transform?`translate3d(${transform.x}px,${transform.y}px,0)`:undefined}} {...listeners} {...attributes}>
+    <span className="dragHandle" aria-hidden="true">⋮⋮</span>
     <div className="taskCardBody"><b className={task.status==='Completed'?'strike':''}>{task.title}</b><small><Link2/>{context}</small><div className="timeMeta"><span><Clock3/> {task.estimated_minutes}m</span><span className={task.status==='In Progress'?'running':''}>{clock}</span></div></div>
     <div className="taskActions">{task.status==='In Progress'?<button title="Hold" onClick={()=>onPatch(task.id,{status:'On Hold'})}><Pause/></button>:task.status!=='Completed'&&<button title={task.status==='On Hold'?'Resume':'Start'} onClick={()=>onPatch(task.id,{status:'In Progress'})}><Play/></button>} {task.status!=='Completed'&&<button title="Complete" onClick={()=>onPatch(task.id,{status:'Completed'})}><CheckCircle2/></button>}<button title="Edit" onClick={()=>onEdit(task)}><Pencil/></button><button className="deleteTask" title="Delete" onClick={()=>onDelete(task.id)}><Trash2/></button></div>
   </article>
